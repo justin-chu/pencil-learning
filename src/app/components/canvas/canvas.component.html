@@ -1,0 +1,239 @@
+<div class="min-h-screen bg-white flex flex-col justify-between">
+  <div class="relative bg-pencil-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div
+        class="flex justify-between items-center py-3 md:justify-start md:space-x-10"
+      >
+        <div class="flex justify-start items-center lg:w-0 lg:flex-1">
+          <a href="#" routerLink="/canvas">
+            <span class="sr-only">Pencil Learning Technologies</span>
+            <img
+              class="mx-auto h-10 w-auto bg-pencil-500 p-2"
+              src="https://about.pencilpd.com/static/pd-logo-f34f6d23756dd3d5390a058e45b95c1b.png"
+              alt="pencil-500 Learning Technologies"
+            />
+          </a>
+          <a
+            href="#"
+            routerLink="/canvas"
+            class="text-base font-medium ml-10 text-white transition duration-300 hover:text-gray-400"
+          >
+            Canvas
+          </a>
+        </div>
+        <div class="-mr-2 -my-2 md:hidden">
+          <button
+            type="button"
+            class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+          >
+            <span class="sr-only">Open menu</span>
+            <!-- Heroicon name: menu -->
+            <svg
+              class="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+          <a
+            *ngIf="!loggedIn"
+            href="#"
+            routerLink="/login"
+            class="whitespace-nowrap text-base font-medium text-white transition duration-300 hover:text-gray-400"
+          >
+            Login
+          </a>
+          <a
+            *ngIf="!loggedIn"
+            href="#"
+            routerLink="/signup"
+            class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-pencil-500 bg-white transition duration-300 hover:bg-gray-300"
+          >
+            Sign up
+          </a>
+          <div
+            *ngIf="loggedIn"
+            class="mr-4 whitespace-nowrap text-base font-medium text-white"
+          >
+            Hi {{ user?.username }}!
+          </div>
+          <a
+            *ngIf="loggedIn"
+            href="#"
+            (click)="authService.logout()"
+            routerLink="/login"
+            class="whitespace-nowrap text-base font-medium text-white transition duration-300 hover:text-gray-400"
+          >
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      Mobile menu, show/hide based on mobile menu state.
+  
+      Entering: "duration-200 ease-out"
+        From: "opacity-0 scale-95"
+        To: "opacity-100 scale-100"
+      Leaving: "duration-100 ease-in"
+        From: "opacity-100 scale-100"
+        To: "opacity-0 scale-95"
+    -->
+    <div
+      class="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden"
+    >
+      <div
+        class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50"
+      >
+        <div class="pt-5 pb-6 px-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <img
+                class="h-8 w-auto"
+                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                alt="Workflow"
+              />
+            </div>
+            <div class="-mr-2">
+              <button
+                type="button"
+                class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              >
+                <span class="sr-only">Close menu</span>
+                <!-- Heroicon name: x -->
+                <svg
+                  class="h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="py-6 px-5 space-y-6">
+          <div class="grid grid-cols-2 gap-y-4 gap-x-8">
+            <a
+              href="#"
+              routerLink="/canvas"
+              class="text-base font-medium text-gray-900 transition duration-300 hover:text-gray-700"
+            >
+              Canvas
+            </a>
+          </div>
+          <div>
+            <a
+              href="#"
+              routerLink="/signup"
+              class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+            >
+              Sign up
+            </a>
+            <p class="mt-6 text-center text-base font-medium text-gray-500">
+              Existing customer?
+              <a
+                href="#"
+                routerLink="/login"
+                class="text-indigo-600 hover:text-indigo-500"
+              >
+                Login
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-green-400">
+      <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between flex-wrap">
+          <div class="w-0 flex-1 flex items-center">
+            <svg
+              class="h-6 w-6 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M2 9.5A3.5 3.5 0 005.5 13H9v2.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 15.586V13h2.5a4.5 4.5 0 10-.616-8.958 4.002 4.002 0 10-7.753 1.977A3.5 3.5 0 002 9.5zm9 3.5H9V8a1 1 0 012 0v5z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <p class="ml-3 font-medium text-white truncate">
+              <span> Succesfully loaded saved canvas! </span>
+            </p>
+          </div>
+          <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+            <button
+              type="button"
+              class="-mr-1 text-white flex transition duration-300 hover:text-gray-400 focus:outline-none sm:-mr-2"
+            >
+              <svg
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="m-auto h-92">
+    <canvas class="border-2 border-gray-500 h-full w-full" id="canvas"></canvas>
+  </div>
+
+  <footer
+    class="relative flex flex-col items-center justify-between gap-2 p-6 text-white bg-pencil-500"
+  >
+    <div class="flex gap-4">
+      <a
+        class="text-white transition duration-300 hover:text-gray-400"
+        href="https://github.com/justin-chu/pencil-learning"
+        >GitHub</a
+      >•<a
+        class="text-white transition duration-300 hover:text-gray-400"
+        href="https://www.justinchu.tech/"
+        >Portfolio</a
+      >•<a
+        class="text-white transition duration-300 hover:text-gray-400"
+        href="https://www.linkedin.com/in/justinchu252/"
+        >LinkedIn</a
+      >
+    </div>
+    <div>Made with ♥️ by Justin Chu</div>
+  </footer>
+</div>
