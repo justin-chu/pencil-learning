@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { fabric } from 'fabric';
 import { AuthService } from '../../shared/services/auth.service';
 import { NgZone } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-canvas',
@@ -9,7 +10,11 @@ import { NgZone } from '@angular/core';
   styleUrls: ['./canvas.component.css'],
 })
 export class CanvasComponent implements OnInit {
-  constructor(public authService: AuthService, public ngZone: NgZone) {}
+  constructor(
+    public authService: AuthService,
+    public ngZone: NgZone,
+    @Inject(DOCUMENT) public document: Document
+  ) {}
 
   public loggedIn = this.authService.isLoggedIn; // Whether the user is logged in or not
   public user; // The user's data
@@ -50,6 +55,14 @@ export class CanvasComponent implements OnInit {
     this.canvas.isDrawingMode = this.mode;
   }
 
+  // Upload an image to Firebase and display on the canvas
+  async uploadImage(event) {
+    const imageURL = await this.authService.uploadImage(event);
+    fabric.Image.fromURL(imageURL, (myImg) => {
+      this.canvas.add(myImg).renderAll();
+    });
+  }
+
   async ngOnInit() {
     // Get the user's data
     await this.authService.getUserData.then((res) => (this.user = res));
@@ -77,34 +90,30 @@ export class CanvasComponent implements OnInit {
       window.setTimeout(() => this.hideBanner(), 8000); // Hide banner after 8 seconds
       fabric.loadSVGFromString(this.user.canvas, (objects, options) => {
         // Deserialize canvas from SVG
-        var obj = fabric.util.groupSVGElements(objects, options);
-        this.canvas.add(obj).renderAll();
+        objects.map((obj) => {
+          this.canvas.add(obj).renderAll();
+        });
       });
     }
 
-    // fabric.Image.fromURL(
-    //   'http://fabricjs.com/assets/pug_small.jpg',
-    //   (myImg) => {
-    //     this.canvas.add(myImg);
-    //   }
-    // );
-
-    // Listen for events
+    // Listen for events and auto-save
     this.canvas.on('object:added', async () => {
       this.startLoading();
       await this.authService.setCanvas(this.canvas.toSVG()); // Store serialized canvas
       this.stopLoading();
     });
 
-    // this.canvas.on('selection:updated', async () => {
-    //   this.canvas.isDrawingMode = 0;
-    //   console.log('asd');
-    //   var sel = new fabric.ActiveSelection(this.canvas.getObjects(), {
-    //     canvas: this.canvas,
-    //   });
-    //   this.canvas.setActiveObject(this.canvas.item(0));
-    //   this.canvas.requestRenderAll();
-    // });
+    this.canvas.on('object:moving', async () => {
+      this.startLoading();
+      await this.authService.setCanvas(this.canvas.toSVG()); // Store serialized canvas
+      this.stopLoading();
+    });
+
+    this.canvas.on('object:scaling', async () => {
+      this.startLoading();
+      await this.authService.setCanvas(this.canvas.toSVG()); // Store serialized canvas
+      this.stopLoading();
+    });
 
     // var canvasSizer = document.getElementById('canvasSizer');
     // var canvasScaleFactor = canvasSizer.offsetWidth / 525;

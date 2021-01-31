@@ -288,9 +288,18 @@
       </div>
       <div>
         <p class="text-xs font-medium text-gray-700 mb-1">Upload an image:</p>
+
         <button
+          (click)="this.document.getElementById('uploadButton').click()"
           class="w-full h-10 flex justify-center items-center px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 transition duration-300 hover:bg-pencil-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pencil-600"
         >
+          <input
+            id="uploadButton"
+            class="hidden"
+            type="file"
+            (change)="uploadImage($event)"
+            accept=".png,.jpg"
+          />
           <svg
             class="h-5 w-5 mr-2"
             xmlns="http://www.w3.org/2000/svg"

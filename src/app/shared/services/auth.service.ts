@@ -6,6 +6,7 @@ import {
   AngularFirestore,
   AngularFirestoreDocument,
 } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -16,6 +17,7 @@ export class AuthService {
     // Inject services
     public afs: AngularFirestore,
     public afAuth: AngularFireAuth,
+    private afStorage: AngularFireStorage,
     public router: Router,
     public ngZone: NgZone
   ) {}
@@ -103,7 +105,16 @@ export class AuthService {
   }
 
   // Upload image to Firebase
-  async uploadImage() {}
+  async uploadImage(event) {
+    var user = firebase.auth().currentUser;
+    const randomId = Math.random().toString(36).substring(2); // Generate random ID
+    this.afStorage.ref(`users/${user.uid}/images/${randomId}`);
+    await this.afStorage.upload(
+      `users/${user.uid}/images/${randomId}`,
+      event.target.files[0]
+    );
+    return `https://firebasestorage.googleapis.com/v0/b/pencil-learning-25ad6.appspot.com/o/users%2F${user.uid}%2Fimages%2F${randomId}?alt=media`;
+  }
 
   // Get current user's data
   get getUserData() {

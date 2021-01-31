@@ -10,6 +10,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Import components
 import { LoginComponent } from './components/login/login.component';
@@ -34,6 +35,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     AngularFirestoreModule,
     AngularFireAuthGuardModule,
     ColorPickerModule,
+    AngularFireStorageModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
