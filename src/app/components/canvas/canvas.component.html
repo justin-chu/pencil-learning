@@ -238,7 +238,7 @@
           <button
             (click)="setMode(1)"
             [ngStyle]="{ 'background-color': mode ? 'black' : '#B8B8B8' }"
-            class="h-10 px-3 flex justify-center items-center border border-transparent text-sm font-medium rounded-none rounded-l-md text-white"
+            class="h-10 px-3 flex justify-center items-center border border-transparent focus:outline-none text-sm font-medium rounded-none rounded-l-md text-white"
           >
             <svg
               class="h-5 w-5"
@@ -254,7 +254,7 @@
           <button
             (click)="setMode(0)"
             [ngStyle]="{ 'background-color': !mode ? 'black' : '#B8B8B8' }"
-            class="h-10 px-3 flex justify-center items-center border border-transparent text-sm font-medium rounded-none rounded-r-md text-white"
+            class="h-10 px-3 flex justify-center items-center border border-transparent focus:outline-none text-sm font-medium rounded-none rounded-r-md text-white"
           >
             <svg
               class="h-4 w-4 mx-0.5"
@@ -334,19 +334,53 @@
   >
     <div class="flex gap-4">
       <a
-        class="text-white transition duration-300 hover:text-gray-400"
+        class="text-white transition duration-300 hover:text-gray-400 flex items-center gap-2"
         href="https://github.com/justin-chu/pencil-learning"
-        >GitHub</a
+      >
+        <img
+          class="h-5 w-5"
+          src="https://rajlab.org/icons/github_white.png"
+        />GitHub</a
       >•<a
-        class="text-white transition duration-300 hover:text-gray-400"
+        class="text-white transition duration-300 hover:text-gray-400 flex items-center gap-2"
         href="https://www.justinchu.tech/"
-        >Portfolio</a
+        ><svg
+          class="h-5 w-5"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
+            clipRule="evenodd"
+          />
+        </svg>
+        Portfolio</a
       >•<a
-        class="text-white transition duration-300 hover:text-gray-400"
+        class="text-white transition duration-300 hover:text-gray-400 flex items-center gap-2"
         href="https://www.linkedin.com/in/justinchu252/"
-        >LinkedIn</a
+        ><img
+          class="h-4 w-4 mb-0.5 mr-0.5"
+          src="https://www.docibgroup.com/assets/linkedin-icon-white.svg"
+        />LinkedIn</a
       >
     </div>
-    <div>Made with ♥️ by Justin Chu</div>
+    <div class="flex items-center">
+      Made with
+      <svg
+        class="h-5 w-5 mx-1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fillRule="evenodd"
+          d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+          clipRule="evenodd"
+        />
+      </svg>
+      by Justin Chu
+    </div>
   </footer>
 </div>
