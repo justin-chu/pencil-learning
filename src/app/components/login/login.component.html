@@ -60,6 +60,23 @@
           Login
         </button>
       </div>
+
+      <div class="flex justify-center">
+        <span class="text-gray-600">or</span>
+      </div>
+      <div>
+        <button
+          (click)="authService.googleLogin()"
+          type="submit"
+          class="group relative w-full flex justify-center py-2 px-4 border border-gray-600 text-sm font-medium rounded-md bg-white transition duration-300 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+        >
+          <img
+            class="h-5 w-5 mr-2"
+            src="https://assets.stickpng.com/images/5847f9cbcef1014c0b5e48c8.png"
+          />
+          Login with Google
+        </button>
+      </div>
     </div>
   </div>
 </div>

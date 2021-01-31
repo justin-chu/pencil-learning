@@ -16,6 +16,9 @@ import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { CanvasComponent } from './components/canvas/canvas.component';
 
+// Import Color Picker
+import { ColorPickerModule } from 'ngx-color-picker';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +33,7 @@ import { CanvasComponent } from './components/canvas/canvas.component';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireAuthGuardModule,
+    ColorPickerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

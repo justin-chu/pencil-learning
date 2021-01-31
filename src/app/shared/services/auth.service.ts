@@ -20,6 +20,21 @@ export class AuthService {
     public ngZone: NgZone
   ) {}
 
+  // Login with Google
+  async googleLogin() {
+    return this.afAuth
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then((result) => {
+        this.ngZone.run(() => {
+          this.router.navigate(['canvas']);
+        });
+        this.setUserData(result.user);
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  }
+
   // Login user with email and password
   async login(email: string, password: string) {
     return this.afAuth
@@ -77,6 +92,18 @@ export class AuthService {
       merge: true,
     });
   }
+
+  // Set current user's canvas
+  async setCanvas(canvas) {
+    var user = firebase.auth().currentUser;
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(
+      `users/${user.uid}`
+    );
+    return userRef.update({ canvas });
+  }
+
+  // Upload image to Firebase
+  async uploadImage() {}
 
   // Get current user's data
   get getUserData() {
