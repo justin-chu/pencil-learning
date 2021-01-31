@@ -73,6 +73,13 @@ export class AuthService {
       });
   }
 
+  // Logout current user
+  async logout() {
+    return this.afAuth.signOut().then(() => {
+      this.router.navigate(['login']);
+    });
+  }
+
   // Check if a user is logged in
   get isLoggedIn(): boolean {
     var user = firebase.auth().currentUser;
@@ -116,6 +123,52 @@ export class AuthService {
     return `https://firebasestorage.googleapis.com/v0/b/pencil-learning-25ad6.appspot.com/o/users%2F${user.uid}%2Fimages%2F${randomId}?alt=media`;
   }
 
+  // Share current user's canvas with another user
+  async shareCanvas(email, canvas) {
+    var user = firebase.auth().currentUser;
+    var success = this.afs
+      .collection('users')
+      .ref.where('email', '==', email)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          return false;
+        } else if (querySnapshot.size == 1) {
+          querySnapshot.forEach((documentSnapshot) => {
+            const otherUser = this.afs.doc(documentSnapshot.ref);
+            otherUser
+              .collection('sharedCanvases')
+              .add({ user: user.email, canvas });
+          });
+          return true;
+        }
+      });
+    return success;
+  }
+
+  // Get current user's shared canvases
+  get getSharedCanvases() {
+    var user = firebase.auth().currentUser;
+    return new Promise((resolve, reject) =>
+      this.afs
+        .collection('users')
+        .doc(user.uid)
+        .collection('sharedCanvases')
+        .get()
+        .toPromise()
+        .then((querySnapshot) => {
+          let sharedCanvases = [];
+          querySnapshot.forEach((doc) => {
+            sharedCanvases.push(doc.data());
+          });
+          resolve(sharedCanvases);
+        })
+        .catch((error) => {
+          reject(error);
+        })
+    );
+  }
+
   // Get current user's data
   get getUserData() {
     var user = firebase.auth().currentUser;
@@ -132,15 +185,7 @@ export class AuthService {
         })
         .catch((error) => {
           reject(error);
-          console.log('Error getting user!');
         })
     );
-  }
-
-  // Logout current user
-  async logout() {
-    return this.afAuth.signOut().then(() => {
-      this.router.navigate(['login']);
-    });
   }
 }

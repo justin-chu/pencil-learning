@@ -237,8 +237,8 @@
         <div class="flex">
           <button
             (click)="setMode(1)"
-            [ngStyle]="{ 'background-color': mode ? 'black' : '#B8B8B8' }"
-            class="h-10 px-3 flex justify-center items-center border border-transparent focus:outline-none text-sm font-medium rounded-none rounded-l-md text-white"
+            [ngClass]="mode ? 'bg-black' : 'bg-gray-400 hover:bg-gray-500'"
+            class="h-10 px-3 flex justify-center items-center border border-transparent focus:outline-none text-sm font-medium rounded-none rounded-l-md text-white transition duration-300"
           >
             <svg
               class="h-5 w-5"
@@ -253,8 +253,8 @@
           </button>
           <button
             (click)="setMode(0)"
-            [ngStyle]="{ 'background-color': !mode ? 'black' : '#B8B8B8' }"
-            class="h-10 px-3 flex justify-center items-center border border-transparent focus:outline-none text-sm font-medium rounded-none rounded-r-md text-white"
+            [ngClass]="!mode ? 'bg-black' : 'bg-gray-400 hover:bg-gray-500'"
+            class="h-10 px-3 flex justify-center items-center border border-transparent focus:outline-none text-sm font-medium rounded-none rounded-r-md text-white transition duration-300"
           >
             <svg
               class="h-4 w-4 mx-0.5"
@@ -276,19 +276,38 @@
           <p class="text-xs font-medium text-gray-700 mb-1">
             Change stroke color:
           </p>
-          <input
-            class="w-32 h-10 px-4 pb-0.5 text-sm font-medium text-white rounded-md"
-            [value]="color"
-            readonly
-            [(colorPicker)]="color"
-            [style.background]="color"
-            (colorPickerChange)="changeColor($event)"
-          />
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+            >
+              <span class="text-white">
+                <svg
+                  class="h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+            <input
+              class="w-32 h-10 pl-11 pr-4 pb-0.5 text-sm font-medium text-white rounded-md"
+              [value]="color"
+              readonly
+              [(colorPicker)]="color"
+              [style.background]="color"
+              (colorPickerChange)="changeColor($event)"
+            />
+          </div>
         </div>
       </div>
       <div>
         <p class="text-xs font-medium text-gray-700 mb-1">Upload an image:</p>
-
         <button
           (click)="this.document.getElementById('uploadButton').click()"
           class="w-full h-10 flex justify-center items-center px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 transition duration-300 hover:bg-pencil-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pencil-600"
@@ -315,18 +334,41 @@
           Upload Image
         </button>
       </div>
+      <div>
+        <p class="text-xs font-medium text-gray-700 mb-1">
+          Load a shared canvas:
+        </p>
+
+        <button
+          (click)="showModal()"
+          class="w-full h-10 flex justify-center items-center px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 transition duration-300 hover:bg-pencil-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pencil-600"
+        >
+          <svg
+            class="h-5 w-5 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
+            />
+          </svg>
+          Load shared canvas
+        </button>
+      </div>
       <div class="absolute right-0">
         <p class="text-xs font-medium text-gray-700 mb-1">Share canvas:</p>
         <div class="mt-1 flex rounded-md shadow-sm">
           <input
             type="email"
-            name="email-address"
-            id="email-address"
+            name="email"
+            id="email"
             class="px-3 w-80 border border-gray-300 bg-gray-50 rounded-none rounded-l-md sm:text-sm outline-none"
             placeholder="Email address"
-            #emailAddress
+            #email
           />
           <button
+            (click)="shareCanvas(email.value)"
             class="w-20 h-10 flex justify-center items-center px-4 border border-transparent text-sm font-medium rounded-none rounded-r-md text-white bg-indigo-500 transition duration-300 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
           >
             Share
@@ -335,6 +377,99 @@
       </div>
     </div>
     <canvas id="canvas"></canvas>
+    <!---------------------------------------------- Modal ---------------------------------------------->
+    <div *ngIf="modal" class="fixed z-10 inset-0 overflow-y-auto">
+      <div
+        class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      >
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span
+          class="hidden sm:inline-block sm:align-middle sm:h-screen"
+          aria-hidden="true"
+          >&#8203;</span
+        >
+        <div
+          class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-headline"
+        >
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                <h3
+                  class="text-lg leading-6 font-medium text-gray-900"
+                  id="modal-headline"
+                >
+                  Load a shared canvas:
+                </h3>
+                <div class="mt-2 w-full">
+                  <p
+                    *ngIf="
+                      sharedCanvases?.length == 0 || sharedCanvases == undefined
+                    "
+                    class="text-sm text-gray-500"
+                  >
+                    You currently have no shared canvases.
+                  </p>
+                  <div
+                    class="max-h-64 overflow-y-auto"
+                    *ngIf="
+                      sharedCanvases?.length > 0 && sharedCanvases != undefined
+                    "
+                  >
+                    <div
+                      class="flex flex-col"
+                      *ngFor="let sharedCanvas of sharedCanvases; let i = index"
+                      [attr.data-index]="i"
+                    >
+                      <button
+                        (click)="setSharedIndex(i)"
+                        [ngClass]="
+                          sharedIndex != i
+                            ? 'bg-gray-200 hover:bg-gray-400 text-black'
+                            : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                        "
+                        class="w-full py-2 px-4 mb-2 rounded-md text-left transition duration-300 focus:outline-none"
+                      >
+                        {{ sharedCanvas.user }}'s canvas
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-gray-50 px-4 py-3 mb-3 sm:px-6 sm:flex sm:flex-row-reverse"
+          >
+            <button
+              (click)="loadSharedCanvas()"
+              type="button"
+              [ngClass]="
+                sharedCanvases?.length == 0 ||
+                sharedCanvases == undefined ||
+                sharedIndex == -1
+                  ? 'border-gray-300 bg-white text-gray-300 hover:bg-gray-50 pointer-events-none'
+                  : 'border-transparent text-white bg-indigo-600 transition duration-300 hover:bg-indigo-700 focus:ring-indigo-500 '
+              "
+              class="w-full inline-flex justify-center rounded-md border shadow-sm px-4 py-2 text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Load Canvas
+            </button>
+            <button
+              (click)="hideModal()"
+              type="button"
+              class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 text-base font-medium transition duration-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!---------------------------------------------- Footer ---------------------------------------------->

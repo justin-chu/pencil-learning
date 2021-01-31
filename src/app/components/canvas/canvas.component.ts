@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { fabric } from 'fabric';
 import { AuthService } from '../../shared/services/auth.service';
 import { NgZone } from '@angular/core';
@@ -16,6 +16,7 @@ export class CanvasComponent implements OnInit {
     @Inject(DOCUMENT) public document: Document
   ) {}
 
+  @ViewChild('email') emailInput; // accessing the reference element
   public loggedIn = this.authService.isLoggedIn; // Whether the user is logged in or not
   public user; // The user's data
   private canvas: any;
@@ -27,7 +28,10 @@ export class CanvasComponent implements OnInit {
   public color: string = '#000'; // The canvas' stroke color
   public banner: boolean = false; // Whether to display the banner or not
   public loading: boolean = true; // Whether to show the loading indicator or not
+  public modal: boolean = false; // Whether to show the modal or not
   public mode: number = 1; // The canvas' drawing mode
+  public sharedCanvases; // The user's shared canvases
+  public sharedIndex = -1; // The selected shared canvas; -1 if none are selected
 
   // Change the stroke color
   public changeColor(newColor: string) {
@@ -49,6 +53,17 @@ export class CanvasComponent implements OnInit {
     this.loading = false;
   }
 
+  // Shoq the modal
+  public showModal() {
+    this.sharedIndex = -1;
+    this.modal = true;
+  }
+
+  // Hide the modal
+  public hideModal() {
+    this.modal = false;
+  }
+
   // Change the drawing mode
   public setMode(newMode) {
     this.mode = newMode;
@@ -63,9 +78,56 @@ export class CanvasComponent implements OnInit {
     });
   }
 
+  // Share canvas with another user by email
+  async shareCanvas(email) {
+    this.startLoading();
+    const success = await this.authService.shareCanvas(
+      email,
+      this.canvas.toSVG()
+    );
+    if (success) {
+      alert('Succesfully shared canvas with ' + email + '!');
+    } else {
+      alert('Sorry, something went wrong.');
+    }
+    this.emailInput.nativeElement.value = '';
+    this.stopLoading();
+  }
+
+  // Load a canvas from SVG
+  public loadCanvas(canvas) {
+    this.startLoading();
+    this.canvas.clear();
+    this.canvas.selection = true;
+    this.canvas.preserveObjectStacking = true;
+    this.canvas.backgroundColor = '#efefef';
+    fabric.loadSVGFromString(canvas, (objects, options) => {
+      // Deserialize canvas from SVG
+      objects.map((obj) => {
+        this.canvas.add(obj).renderAll();
+      });
+    });
+    this.stopLoading();
+  }
+
+  // Set the selected shared canvas
+  public setSharedIndex(index) {
+    this.sharedIndex = index;
+  }
+
+  // Load the selected shared canvas
+  public loadSharedCanvas() {
+    this.hideModal();
+    this.loadCanvas(this.sharedCanvases[this.sharedIndex].canvas);
+  }
+
   async ngOnInit() {
     // Get the user's data
     await this.authService.getUserData.then((res) => (this.user = res));
+    // Get the user's shared canvases
+    await this.authService.getSharedCanvases.then((res) => {
+      this.sharedCanvases = res;
+    });
     this.stopLoading();
 
     // Canvas setup
@@ -88,12 +150,7 @@ export class CanvasComponent implements OnInit {
     if ('canvas' in this.user) {
       this.banner = true;
       window.setTimeout(() => this.hideBanner(), 8000); // Hide banner after 8 seconds
-      fabric.loadSVGFromString(this.user.canvas, (objects, options) => {
-        // Deserialize canvas from SVG
-        objects.map((obj) => {
-          this.canvas.add(obj).renderAll();
-        });
-      });
+      this.loadCanvas(this.user.canvas);
     }
 
     // Listen for events and auto-save
