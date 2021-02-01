@@ -1,4 +1,10 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import { fabric } from 'fabric';
 import { AuthService } from '../../shared/services/auth.service';
 import { NgZone } from '@angular/core';
@@ -20,11 +26,6 @@ export class CanvasComponent implements OnInit {
   public loggedIn = this.authService.isLoggedIn; // Whether the user is logged in or not
   public user; // The user's data
   private canvas: any;
-  private size: any = {
-    // The canvas' size
-    width: 1200,
-    height: 600,
-  };
   public color: string = '#000'; // The canvas' stroke color
   public banner: boolean = false; // Whether to display the banner or not
   public loading: boolean = true; // Whether to show the loading indicator or not
@@ -32,6 +33,8 @@ export class CanvasComponent implements OnInit {
   public mode: number = 1; // The canvas' drawing mode
   public sharedCanvases; // The user's shared canvases
   public sharedIndex = -1; // The selected shared canvas; -1 if none are selected
+  public width: number; // Width of window
+  public height: number = 600; // Height of canvas
 
   // Change the stroke color
   public changeColor(newColor: string) {
@@ -122,6 +125,9 @@ export class CanvasComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // Set window width
+    this.width = window.innerWidth;
+    console.log('adsa', this.width);
     // Get the user's data
     await this.authService.getUserData.then((res) => (this.user = res));
     // Get the user's shared canvases
@@ -138,8 +144,12 @@ export class CanvasComponent implements OnInit {
     });
 
     // Set the canvas' dimensions
-    this.canvas.setWidth(this.size.width);
-    this.canvas.setHeight(this.size.height);
+    if (this.width < 1024) {
+      this.canvas.setWidth(this.width - 30);
+    } else {
+      this.canvas.setWidth(this.width - 120 > 1400 ? 1400 : this.width - 120);
+    }
+    this.canvas.setHeight(this.height);
 
     this.canvas.isDrawingMode = this.mode;
     this.canvas.freeDrawingBrush.color = this.color;
@@ -171,21 +181,5 @@ export class CanvasComponent implements OnInit {
       await this.authService.setCanvas(this.canvas.toSVG()); // Store serialized canvas
       this.stopLoading();
     });
-
-    // var canvasSizer = document.getElementById('canvasSizer');
-    // var canvasScaleFactor = canvasSizer.offsetWidth / 525;
-    // var width = canvasSizer.offsetWidth;
-    // var height = canvasSizer.offsetHeight;
-    // var ratio = this.canvas.getWidth() / this.canvas.getHeight();
-    // if (width / height > ratio) {
-    //   width = height * ratio;
-    // } else {
-    //   height = width / ratio;
-    // }
-    // var scale = width / this.canvas.getWidth();
-    // var zoom = this.canvas.getZoom();
-    // zoom *= scale;
-    // this.canvas.setDimensions({ width: width, height: height });
-    // this.canvas.setViewportTransform([zoom, 0, 0, zoom, 0, 0]);
   }
 }
