@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Inject,
-  ViewChild,
-  HostListener,
-} from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { fabric } from 'fabric';
 import { AuthService } from '../../shared/services/auth.service';
 import { NgZone } from '@angular/core';
@@ -26,10 +20,11 @@ export class CanvasComponent implements OnInit {
   public loggedIn = this.authService.isLoggedIn; // Whether the user is logged in or not
   public user; // The user's data
   private canvas: any;
-  public color: string = '#000'; // The canvas' stroke color
+  public color: string = '#677dea'; // The canvas' stroke color
   public banner: boolean = false; // Whether to display the banner or not
   public loading: boolean = true; // Whether to show the loading indicator or not
   public modal: boolean = false; // Whether to show the modal or not
+  public menu: boolean = false; // Whether to show the menu or not
   public mode: number = 1; // The canvas' drawing mode
   public sharedCanvases; // The user's shared canvases
   public sharedIndex = -1; // The selected shared canvas; -1 if none are selected
@@ -65,6 +60,11 @@ export class CanvasComponent implements OnInit {
   // Hide the modal
   public hideModal() {
     this.modal = false;
+  }
+
+  // Toggle the menu
+  public toggleMenu() {
+    this.menu = !this.menu;
   }
 
   // Change the drawing mode
@@ -127,7 +127,6 @@ export class CanvasComponent implements OnInit {
   async ngOnInit() {
     // Set window width
     this.width = window.innerWidth;
-    console.log('adsa', this.width);
     // Get the user's data
     await this.authService.getUserData.then((res) => (this.user = res));
     // Get the user's shared canvases

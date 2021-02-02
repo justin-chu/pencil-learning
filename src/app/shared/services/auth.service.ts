@@ -45,7 +45,6 @@ export class AuthService {
         this.ngZone.run(() => {
           this.router.navigate(['canvas']);
         });
-        console.log(result.user);
         this.setUserData(result.user);
       })
       .catch((error) => {
