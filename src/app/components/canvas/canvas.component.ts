@@ -22,6 +22,7 @@ export class CanvasComponent implements OnInit {
   private canvas: any;
   public color: string = '#677dea'; // The canvas' stroke color
   public banner: boolean = false; // Whether to display the banner or not
+  public shimmer: boolean = true; // Whether to show the shimmer or not
   public loading: boolean = true; // Whether to show the loading indicator or not
   public modal: boolean = false; // Whether to show the modal or not
   public menu: boolean = false; // Whether to show the menu or not
@@ -39,6 +40,16 @@ export class CanvasComponent implements OnInit {
   // Hide the banner
   public hideBanner() {
     this.banner = false;
+  }
+
+  // Start the shimmer
+  public startShimmer() {
+    this.shimmer = true;
+  }
+
+  // Stop the shimmer
+  public stopShimmer() {
+    this.shimmer = false;
   }
 
   // Start the loading indicator
@@ -99,6 +110,7 @@ export class CanvasComponent implements OnInit {
 
   // Load a canvas from SVG
   public loadCanvas(canvas) {
+    this.startShimmer();
     this.startLoading();
     this.canvas.clear();
     this.canvas.selection = true;
@@ -110,6 +122,7 @@ export class CanvasComponent implements OnInit {
         this.canvas.add(obj).renderAll();
       });
     });
+    this.stopShimmer();
     this.stopLoading();
   }
 
@@ -133,6 +146,7 @@ export class CanvasComponent implements OnInit {
     await this.authService.getSharedCanvases.then((res) => {
       this.sharedCanvases = res;
     });
+    this.stopShimmer();
     this.stopLoading();
 
     // Canvas setup
