@@ -21,11 +21,14 @@
         </span>
       </p>
     </div>
+
+    <!---------------------------------------------- Login With Email and Password Inputs and Button ---------------------------------------------->
     <div class="mt-8 space-y-6">
       <div class="rounded-md shadow-sm -space-y-px">
         <div>
           <label for="email-address" class="sr-only">Email address</label>
           <input
+            (keyup.enter)="loginButton.click()"
             id="email-address"
             name="email"
             type="email"
@@ -39,6 +42,7 @@
         <div>
           <label for="password" class="sr-only">Password</label>
           <input
+            (keyup.enter)="loginButton.click()"
             id="password"
             name="password"
             type="password"
@@ -50,20 +54,21 @@
           />
         </div>
       </div>
-
       <div>
         <button
           (click)="authService.login(email.value, password.value)"
           type="submit"
           class="group relative w-full flex justify-center mt-10 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pencil-500 transition duration-300 hover:bg-pencil-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pencil-600"
+          #loginButton
         >
           Login
         </button>
       </div>
-
       <div class="flex justify-center">
         <span class="text-gray-600">or</span>
       </div>
+
+      <!---------------------------------------------- Login With Google Button ---------------------------------------------->
       <div>
         <button
           (click)="authService.googleLogin()"

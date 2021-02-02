@@ -53,12 +53,12 @@ export class AuthService {
   }
 
   // Sign up user with email and password
-  async signup(
-    // username: string,
-    email: string,
-    password: string
-    // confirmPassword: string
-  ) {
+  async signup(email: string, password: string, confirmPassword: string) {
+    // Make sure passwords match
+    if (confirmPassword != password) {
+      window.alert("Passwords don't match!");
+      return;
+    }
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
@@ -93,8 +93,6 @@ export class AuthService {
     const userData: User = {
       uid: user.uid,
       email: user.email,
-      username: 'temp',
-      // username: user.username,
     };
     return userRef.set(userData, {
       merge: true,
@@ -119,6 +117,7 @@ export class AuthService {
       `users/${user.uid}/images/${randomId}`,
       event.target.files[0]
     );
+    // Return link to image
     return `https://firebasestorage.googleapis.com/v0/b/pencil-learning-25ad6.appspot.com/o/users%2F${user.uid}%2Fimages%2F${randomId}?alt=media`;
   }
 

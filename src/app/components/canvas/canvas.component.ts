@@ -1,4 +1,10 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import { fabric } from 'fabric';
 import { AuthService } from '../../shared/services/auth.service';
 import { NgZone } from '@angular/core';
@@ -112,6 +118,7 @@ export class CanvasComponent implements OnInit {
   public loadCanvas(canvas) {
     this.startShimmer();
     this.startLoading();
+    // Clear and reset canvas
     this.canvas.clear();
     this.canvas.selection = true;
     this.canvas.preserveObjectStacking = true;
@@ -135,6 +142,18 @@ export class CanvasComponent implements OnInit {
   public loadSharedCanvas() {
     this.hideModal();
     this.loadCanvas(this.sharedCanvases[this.sharedIndex].canvas);
+  }
+
+  // Listen for window resize
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    // Make canvas width responsive
+    this.width = event.target.innerWidth;
+    if (this.width < 1024) {
+      this.canvas.setWidth(this.width - 30);
+    } else {
+      this.canvas.setWidth(this.width - 120 > 1400 ? 1400 : this.width - 120);
+    }
   }
 
   async ngOnInit() {

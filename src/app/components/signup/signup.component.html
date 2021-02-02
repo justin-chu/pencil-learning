@@ -21,11 +21,14 @@
         </span>
       </p>
     </div>
+
+    <!---------------------------------------------- Sign Up With Email and Password Inputs and Button ---------------------------------------------->
     <div class="mt-8 space-y-6">
       <div class="rounded-md shadow-sm -space-y-px">
         <div>
           <label for="email-address" class="sr-only">Email address</label>
           <input
+            (keyup.enter)="signUpButton.click()"
             id="email-address"
             name="email"
             type="email"
@@ -37,20 +40,9 @@
           />
         </div>
         <div>
-          <label for="email-address" class="sr-only">Username</label>
-          <input
-            id="email-address"
-            name="username"
-            type="text"
-            autocomplete="username"
-            required
-            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-pencil-500 focus:border-pencil-500 focus:z-10 sm:text-sm"
-            placeholder="Username"
-          />
-        </div>
-        <div>
           <label for="password" class="sr-only">Password</label>
           <input
+            (keyup.enter)="signUpButton.click()"
             id="password"
             name="password"
             type="password"
@@ -64,6 +56,7 @@
         <div>
           <label for="password" class="sr-only">Confirm Password</label>
           <input
+            (keyup.enter)="signUpButton.click()"
             id="confirm-password"
             name="confirm-password"
             type="password"
@@ -71,15 +64,22 @@
             required
             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-pencil-500 focus:border-pencil-500 focus:z-10 sm:text-sm"
             placeholder="Confirm Password"
+            #confirmPassword
           />
         </div>
       </div>
-
       <div>
         <button
-          (click)="authService.signup(email.value, password.value)"
+          (click)="
+            authService.signup(
+              email.value,
+              password.value,
+              confirmPassword.value
+            )
+          "
           type="submit"
           class="group relative w-full flex justify-center mt-10 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pencil-500 transition duration-300 hover:bg-pencil-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pencil-600"
+          #signUpButton
         >
           Sign up
         </button>
@@ -87,6 +87,8 @@
       <div class="flex justify-center">
         <span class="text-gray-600">or</span>
       </div>
+
+      <!---------------------------------------------- Sign Up With Google Button ---------------------------------------------->
       <div>
         <button
           (click)="authService.googleLogin()"
